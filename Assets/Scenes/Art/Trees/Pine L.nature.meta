@@ -1,0 +1,52 @@
+fileFormatVersion: 2
+guid: b7f3913920c526244b9287fef17e7e60
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {instanceID: 0}
+  _source: {instanceID: 0}
+  _format: 0
+  _materialImportSettings:
+    _convertMaterials: 1
+    _settings: []
+  _textureImportSettings:
+    _convertTextures: 0
+    _settings: []
+  _meshImportSettings:
+    _convertMeshes: 1
+    _meshComplexity: 1
+    _axisOrientation: 0
+    _trunkHasColliders: 0
+    _branchWindScale: 1
+    _leafWindScale: 1
+    _windVariation: 1
+    _mergeIntersecting: 0
+    _removeDoubleSidedFaces: 1
+    _settings: []
+  _importSettings:
+    _source: {instanceID: 0}
+    _format: 0
+    _materialImportSettings:
+      _convertMaterials: 1
+      _settings: []
+    _textureImportSettings:
+      _convertTextures: 0
+      _settings: []
+    _meshImportSettings:
+      _convertMeshes: 1
+      _meshComplexity: 1
+      _axisOrientation: 0
+      _trunkHasColliders: 0
+      _branchWindScale: 1
+      _leafWindScale: 1
+      _windVariation: 1
+      _mergeIntersecting: 0
+      _removeDoubleSidedFaces: 1
+      _settings: []
+    _rendererImportSettings:
+      _overrideCastShadows: 0
+      _castShadows: 1

@@ -1,0 +1,118 @@
+fileFormatVersion: 2
+guid: 7560085364b32024ba82c4ea4223da38
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: d2f8ca521d4faaa41b1d31f0f02aec62, type: 3}
+  _source: {instanceID: 0}
+  _format: 0
+  _materialImportSettings:
+    _convertMaterials: 1
+    _settings: []
+  _textureImportSettings:
+    _convertTextures: 0
+    _settings: []
+  _meshImportSettings:
+    _convertMeshes: 1
+    _meshComplexity: 1
+    _axisOrientation: 0
+    _trunkHasColliders: 0
+    _branchWindScale: 1
+    _leafWindScale: 1
+    _windVariation: 1
+    _mergeIntersecting: 0
+    _removeDoubleSidedFaces: 1
+    _settings: []
+  _importSettings:
+    _source: {fileID: 919132149155446097, guid: 42e2920e69c558948af7d7a7e8eecf0b,
+      type: 3}
+    _format: 0
+    _materialImportSettings:
+      _convertMaterials: 1
+      _settings:
+      - Id: Bark_Base
+        Shader: Universal Render Pipeline/Nature/SpeedTree8_PBRLit
+        Type: 0
+        Override: {instanceID: 0}
+        Wind: 1
+        Translucency: 1
+        Interaction: 1
+        Overlay: 1
+        FlipNormals: 1
+        Floats: []
+        Vectors: []
+        Colors: []
+        Textures: []
+      - Id: Oak_Sapling 1
+        Shader: Universal Render Pipeline/Nature/SpeedTree8_PBRLit
+        Type: 0
+        Override: {instanceID: 0}
+        Wind: 1
+        Translucency: 1
+        Interaction: 1
+        Overlay: 1
+        FlipNormals: 1
+        Floats: []
+        Vectors: []
+        Colors: []
+        Textures: []
+    _textureImportSettings:
+      _convertTextures: 0
+      _settings:
+      - Id: Bark_Base_Color
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Bark_Base_Extra
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Bark_Base_Normal
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_Sapling 1_Color
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_Sapling 1_Extra
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_Sapling 1_Normal
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_Sapling 1_Subsurface
+        TextureQuality: 1
+        BoostSharpness: 1
+    _meshImportSettings:
+      _convertMeshes: 1
+      _meshComplexity: 1
+      _axisOrientation: 0
+      _trunkHasColliders: 0
+      _branchWindScale: 1
+      _leafWindScale: 1
+      _windVariation: 1
+      _mergeIntersecting: 0
+      _removeDoubleSidedFaces: 1
+      _settings:
+      - Id: Oak_Sapling 1_LOD0
+        SubMeshes:
+        - Id: Bark_Base
+          Type: 0
+        - Id: Oak_Sapling 1
+          Type: 3
+      - Id: Oak_Sapling 1_LOD1
+        SubMeshes:
+        - Id: Bark_Base
+          Type: 0
+        - Id: Oak_Sapling 1
+          Type: 3
+      - Id: Oak_Sapling 1_LOD2
+        SubMeshes:
+        - Id: Bark_Base
+          Type: 0
+        - Id: Oak_Sapling 1
+          Type: 3
+    _rendererImportSettings:
+      _overrideCastShadows: 0
+      _castShadows: 1

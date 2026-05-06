@@ -1,0 +1,184 @@
+fileFormatVersion: 2
+guid: 77fea55ad271c6249934729f0c375128
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: d2f8ca521d4faaa41b1d31f0f02aec62, type: 3}
+  _source: {instanceID: 0}
+  _format: 0
+  _materialImportSettings:
+    _convertMaterials: 1
+    _settings: []
+  _textureImportSettings:
+    _convertTextures: 0
+    _settings: []
+  _meshImportSettings:
+    _convertMeshes: 1
+    _meshComplexity: 1
+    _axisOrientation: 0
+    _trunkHasColliders: 0
+    _branchWindScale: 1
+    _leafWindScale: 1
+    _windVariation: 1
+    _mergeIntersecting: 0
+    _removeDoubleSidedFaces: 1
+    _settings: []
+  _importSettings:
+    _source: {fileID: 919132149155446097, guid: a621730928e48c640b17eee482f37b9d,
+      type: 3}
+    _format: 2
+    _materialImportSettings:
+      _convertMaterials: 1
+      _settings:
+      - Id: Bark_Base_Mat
+        Shader: Universal Render Pipeline/Lit
+        Type: 0
+        Override: {instanceID: 0}
+        Wind: 1
+        Translucency: 1
+        Interaction: 1
+        Overlay: 1
+        FlipNormals: 1
+        Floats: []
+        Vectors: []
+        Colors: []
+        Textures: []
+      - Id: Oak_English_Cluster_Branch_FallTransition_Mat
+        Shader: Universal Render Pipeline/Lit
+        Type: 0
+        Override: {instanceID: 0}
+        Wind: 1
+        Translucency: 1
+        Interaction: 1
+        Overlay: 1
+        FlipNormals: 1
+        Floats: []
+        Vectors: []
+        Colors: []
+        Textures: []
+      - Id: Oak_English_Cluster_Branch_Summer_Mat
+        Shader: Universal Render Pipeline/Lit
+        Type: 0
+        Override: {instanceID: 0}
+        Wind: 1
+        Translucency: 1
+        Interaction: 1
+        Overlay: 1
+        FlipNormals: 1
+        Floats: []
+        Vectors: []
+        Colors: []
+        Textures: []
+      - Id: Oak_English_Cluster_Leaf_FallTransition_Mat
+        Shader: Universal Render Pipeline/Lit
+        Type: 0
+        Override: {instanceID: 0}
+        Wind: 1
+        Translucency: 1
+        Interaction: 1
+        Overlay: 1
+        FlipNormals: 1
+        Floats: []
+        Vectors: []
+        Colors: []
+        Textures: []
+      - Id: Oak_English_Cluster_Leaf_Summer_Mat
+        Shader: Universal Render Pipeline/Lit
+        Type: 0
+        Override: {instanceID: 0}
+        Wind: 1
+        Translucency: 1
+        Interaction: 1
+        Overlay: 1
+        FlipNormals: 1
+        Floats: []
+        Vectors: []
+        Colors: []
+        Textures: []
+    _textureImportSettings:
+      _convertTextures: 0
+      _settings:
+      - Id: Bark_Base_Color
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Bark_Base_Normal
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_English_Cluster_Branch_FallTransition_Color
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_English_Cluster_Branch_FallTransition_Normal
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_English_Cluster_Branch_Summer_Color
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_English_Cluster_Branch_Summer_Normal
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_English_Cluster_Leaf_FallTransition_Color
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_English_Cluster_Leaf_FallTransition_Normal
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_English_Cluster_Leaf_Summer_Color
+        TextureQuality: 1
+        BoostSharpness: 1
+      - Id: Oak_English_Cluster_Leaf_Summer_Normal
+        TextureQuality: 1
+        BoostSharpness: 1
+    _meshImportSettings:
+      _convertMeshes: 1
+      _meshComplexity: 1
+      _axisOrientation: 0
+      _trunkHasColliders: 0
+      _branchWindScale: 1
+      _leafWindScale: 1
+      _windVariation: 1
+      _mergeIntersecting: 0
+      _removeDoubleSidedFaces: 1
+      _settings:
+      - Id: LOD0
+        SubMeshes:
+        - Id: Oak_English_Cluster_Leaf_FallTransition_Mat
+          Type: 0
+        - Id: Bark_Base_Mat
+          Type: 0
+        - Id: Oak_English_Cluster_Leaf_Summer_Mat
+          Type: 0
+        - Id: Oak_English_Cluster_Branch_Summer_Mat
+          Type: 0
+        - Id: Oak_English_Cluster_Branch_FallTransition_Mat
+          Type: 0
+      - Id: LOD1
+        SubMeshes:
+        - Id: Oak_English_Cluster_Leaf_FallTransition_Mat
+          Type: 0
+        - Id: Bark_Base_Mat
+          Type: 0
+        - Id: Oak_English_Cluster_Leaf_Summer_Mat
+          Type: 0
+        - Id: Oak_English_Cluster_Branch_Summer_Mat
+          Type: 0
+        - Id: Oak_English_Cluster_Branch_FallTransition_Mat
+          Type: 0
+      - Id: LOD2
+        SubMeshes:
+        - Id: Oak_English_Cluster_Leaf_FallTransition_Mat
+          Type: 0
+        - Id: Bark_Base_Mat
+          Type: 0
+        - Id: Oak_English_Cluster_Leaf_Summer_Mat
+          Type: 0
+        - Id: Oak_English_Cluster_Branch_Summer_Mat
+          Type: 0
+        - Id: Oak_English_Cluster_Branch_FallTransition_Mat
+          Type: 0
+    _rendererImportSettings:
+      _overrideCastShadows: 0
+      _castShadows: 1

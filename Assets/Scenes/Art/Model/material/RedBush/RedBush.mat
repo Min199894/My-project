@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RedBush
+  m_Shader: {fileID: 4800000, guid: 5fd673685b00a5140aa8676a732d3656, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _ALPHATEST
+  - _BAKED_MESH_DATA
+  - _COLOR_HSL
+  - _DEBUG_ON
+  - _INTERACTION_OFF
+  - _LIGHTING_QUALITY_HIGH
+  - _LINKMAPTILINGOFFSET_ON
+  - _NORMALMAP
+  - _OVERLAY_OFF
+  - _SURFACE_MAP_PACKED
+  - _TRANSLUCENCY_MAP
+  - _WIND
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2450
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: f77b4849425dbfa4eae130880d1388b9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: 4788528ec606703448277afe0e790be3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal:
+        m_Texture: {fileID: 2800000, guid: 99dd4ed1babf0a343a421e75d503f6d3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ThicknessMap:
+        m_Texture: {fileID: 2800000, guid: cad0a8f277b3ef041a6dce0dc243742d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaTestThreshold: 0.5
+    - _ColorCorrection: 1
+    - _DEBUG: 3
+    - _DoubleSidedMode: 0
+    - _GustTint: 0.04
+    - _RecalculateWindNormals: 0.5
+    - _TranslucencyAmbient: 0.5
+    - _TranslucencyBlendMode: 0
+    - _TranslucencyDistortion: 0.5
+    - _TranslucencyScattering: 2
+    - _TranslucencyShadow: 0.8
+    - _TranslucencyStrength: 1
+    - _TurbulenceStrength: 2
+    - _Wind: 1
+    - _WindStrength: 1
+    - _WindVariation: 0
+    m_Colors:
+    - _BaseColor: {r: 0.47959185, g: 1, b: 0, a: 1}
+    - _BendTint: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _GlossRemap: {r: 0, g: 0.6483127, b: 0, a: 0}
+    - _HueRange: {r: 0, g: 0, b: 0, a: 0}
+    - _LightnessRange: {r: 0, g: 0, b: 0, a: 0}
+    - _OcclusionRemap: {r: 0, g: 1, b: 0, a: 0}
+    - _SaturationRange: {r: 0, g: 0, b: 0, a: 0}
+    - _ScaleFade: {r: 50, g: 20, b: 0, a: 0}
+    - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
+    - _Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _TintVariation: {r: 1, g: 1, b: 1, a: 1}
+    - _TranslucencyColor: {r: 1, g: 1, b: 1, a: 1}
+    - _WindFade: {r: 50, g: 20, b: 0, a: 0}
+  m_BuildTextureStacks: []
