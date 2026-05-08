@@ -28,7 +28,14 @@ void VertexMethod(VertexAttributes vertex, inout Varyings varyings, float4 timeO
     //varyings.positionWS.xz += offset.xz;
     //varyings.positionWS.y -= offset.y;
     
-    Wind(input,varyings,timeOffset.x);
+    float3 windOffset =  Wind(
+      input,
+      varyings.positionWS,
+      timeOffset );
+  
+    float3 resultOffset = windOffset;
+    varyings.positionWS =  FixStretching(  varyings.positionWS + resultOffset, varyings.positionWS,
+    float3( varyings.positionWS.x, objectPivot.y, varyings.positionWS.z ) );
     // }
     
     varyings.noise = PerVertexPerlinNoise(objectPivot);
