@@ -30,10 +30,13 @@ void VertexMethod(VertexAttributes vertex, inout Varyings varyings, float4 timeO
        varyings.positionWS,
        timeOffset );
   
-    float3 resultOffset = windOffset;
-    varyings.positionWS =  FixStretching(  varyings.positionWS + resultOffset, varyings.positionWS,
-    float3( varyings.positionWS.x, objectPivot.y, varyings.positionWS.z ) );
+    // float3 resultOffset = windOffset;
+    // varyings.positionWS =  FixStretching(  
+    //     varyings.positionWS + resultOffset, 
+    //     varyings.positionWS,
+    // varyings.branchStart);
     Wind_Trunk(vertex,input,varyings);
+    Wind_TrunkBranch(vertex,input,varyings);
    
     // float3 windOffset =  Wind(
     //   input,
@@ -66,6 +69,9 @@ Varyings vert( VertexAttributes input )
     output.uv0 = input.uv0;
     
     output.uv1 = input.uv1;
+    
+    output.branchStart = float4(input.uv2.xy, input.uv3.x, 1);
+    output.branchEnd = float4(input.uv3.y, input.uv4.xy, 1);
     
     output.color = input.color;
     output.viewDirectionWS.xyz = normalize( _WorldSpaceCameraPos.xyz - positionWS );

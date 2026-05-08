@@ -15,6 +15,7 @@ public struct Branch
   public VertexType Type;
   public Vector3 branchPositionStart;
   public Vector3 branchPositionEnd;
+  public bool bakePivot;
 
   public static Branch Invalid
   {
@@ -51,6 +52,7 @@ public struct Branch
     this.Bounds = new Bounds();
     this.branchPositionStart = Vector3.zero;
     this.branchPositionEnd = Vector3.zero;
+    this.bakePivot = false;
     if (triangles == null || triangles.Length == 0)
       return;
     this.Bounds = triangles[0].Bounds;

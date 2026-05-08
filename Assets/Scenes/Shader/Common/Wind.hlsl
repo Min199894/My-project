@@ -521,6 +521,53 @@ void Wind_Trunk(
                             (baseFrequency*0.75 + gustFrequency) * ambientStrength *0.0375 * 2);
 }
 
+void Wind_TrunkBranch(
+    VertexAttributes vertex,
+    WindInput input,
+    inout Varyings varyings)
+{
+    float2 bendFactor = _TrunkBendFactor.xy;
+    float trunkMask = GetTrunkMask(vertex.positionOS, varyings.uv1, 
+        bendFactor.x, bendFactor.y);
+    float ambientStrength = GetWindStrength();
+   
+    
+    float4 trunkAmbint = 
+        AmbientFrequency(input.objectPivot,
+            varyings.positionWS,
+            input.direction,
+            0, 0.75,
+            g_SmoothTime.x) + ambientStrength;
+    
+    trunkAmbint *= trunkMask;
+    
+    float3 trunkGust = 
+        SampleGust(input.objectPivot,varyings.positionWS, input.direction
+            ,0, 0, 7, g_WindOffset.xy);
+    trunkGust *= trunkMask;
+    
+    float gustFrequency = trunkAmbint.w + length( trunkGust );
+    float baseFrequency1 = trunkAmbint.x;
+    float baseFrequency2 = trunkAmbint.x + trunkAmbint.y;
+    
+    float baseFrequency = lerp(baseFrequency1, baseFrequency2, (_SinTime.x + 1) * 0.5 * ambientStrength);
+    
+    // varyings.positionWS = RotateAroundAxis(input.objectPivot, varyings.positionWS,
+    //                         normalize(cross(float3(0,1,0), input.direction)),
+    //                         (baseFrequency*0.75 + gustFrequency) * ambientStrength *0.0375 * 2);
+    #ifdef _TYPE_TREE_BARK
+    varyings.positionWS = RotateAroundAxis(TransformObjectToWorld(varyings.branchStart), varyings.positionWS,
+                            normalize(cross(varyings.branchEnd - varyings.branchStart, input.direction)),
+                             (baseFrequency*0.75 + gustFrequency) * ambientStrength *0.0375 * 2);
+    #endif
+    
+    #ifdef _TYPE_TREE_LEAVES
+    varyings.positionWS = RotateAroundAxis(TransformObjectToWorld(varyings.branchStart), varyings.positionWS,
+                           normalize(cross(float3(0,1,0), input.direction)),
+                            (baseFrequency*0.75 + gustFrequency) * ambientStrength *0.0375 * 2);
+    #endif
+}
+
 void Wind(
                 inout VertexAttributes vertex,
                 inout Varyings surface,

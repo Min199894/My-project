@@ -13,6 +13,9 @@ struct VertexAttributes
     float4 tangentOS    : TANGENT;
     float2 uv0     : TEXCOORD0;
     float2 uv1     : TEXCOORD1;
+    float2 uv2     : TEXCOORD2;
+    float2 uv3     : TEXCOORD3;
+    float2 uv4     : TEXCOORD4;
 
     float4 color : COLOR;
    
@@ -35,7 +38,9 @@ struct Varyings
     float4 color                    : COLOR;
     
     float noise                     : TEXCOORD10; 
-    float4 debug                     : TEXCOORD11; 
+    float4 debug                    : TEXCOORD11; 
+    float4 branchStart              : TEXCOORD12;
+    float4 branchEnd                : TEXCOORD13;
     
     #if defined(SHADER_STAGE_FRAGMENT)
     FRONT_FACE_TYPE cullFace : FRONT_FACE_SEMANTIC;
@@ -73,6 +78,7 @@ float4 _Tint;
 float4 _TintVariation;
 float2 _ScaleFade;
 float _GustTint;
+float _Test;
 
 float _ColorCorrection;
 float4 _HSL;

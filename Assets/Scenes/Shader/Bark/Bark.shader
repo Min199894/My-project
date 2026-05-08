@@ -30,6 +30,7 @@ Shader "Unlit/Bark"
         _ScaleFade ("Scale Fade", Vector) = (50, 20, 0, 0)
         
         [Toggle]_DEBUG("DebugMode", Float) = 1
+        _Test("_Test", Float) = 0
     }
     SubShader
     {

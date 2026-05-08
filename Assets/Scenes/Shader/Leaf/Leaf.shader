@@ -46,6 +46,7 @@ Shader "Unlit/Leaf"
         _ScaleFade ("Scale Fade", Vector) = (50, 20, 0, 0)
         
         [Toggle]_DEBUG("DebugMode", Float) = 1
+        _Test("DebugMode", Float) = 1
     }
     SubShader
     {

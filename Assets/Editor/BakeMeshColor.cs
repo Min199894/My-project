@@ -51,6 +51,7 @@ public class BakeMeshColor : EditorWindow
         }
 
         EditorGUILayout.BeginVertical();
+        BakePivot = EditorGUILayout.Toggle("Bake Pivot to branch?", BakePivot);
         target = EditorGUILayout.ObjectField("Target", target, typeof(Object), true) as GameObject;
         if (target != null)
         {
@@ -128,6 +129,9 @@ public class BakeMeshColor : EditorWindow
     {
         Color[] color = new Color[meshAnalyzer.Vertices.Length];
         Vector2[] uv1 = new Vector2[meshAnalyzer.Vertices.Length];
+        Vector2[] uv2 = new Vector2[meshAnalyzer.Vertices.Length];
+        Vector2[] uv3 = new Vector2[meshAnalyzer.Vertices.Length];
+        Vector2[] uv4 = new Vector2[meshAnalyzer.Vertices.Length];
         
         Bounds bounds = meshAnalyzer.mesh.bounds;
         for (int i = 0; i < meshAnalyzer.Vertices.Length; i++)
@@ -138,48 +142,104 @@ public class BakeMeshColor : EditorWindow
                     color[i].r = meshAnalyzer.mesh.colors[i].r;
                     color[i].g = (float) new System.Random(meshAnalyzer.Vertices[i].SegmentID).NextDouble() - 0.5f;
                     color[i].b = 1;
+                    meshAnalyzer.mesh.colors = color;
+                    //meshAnalyzer.mesh.uv2 = uv1;
                     break;
                 case VertexType.Branch:
                 case VertexType.Leaf:
-                    // float distance1 = 0.0f;
-                    // float num1 = 0.0f;
-                    // float num2 = 0.0f;
-                    // float a;
-                    // Branch branch = meshAnalyzer.TryGetBranchForVertex(i);
-                    // Leaf leafForVertex = meshAnalyzer.TryGetLeafForVertex(i);
-                    // if (leafForVertex.IsValid)
-                    //     branch = meshAnalyzer.TryGetBranchByID(leafForVertex.Branch);
-                    // if (branch.IsValid && branch.Parent>-1)
-                    // {
-                    //     meshAnalyzer.Hierarchy.DistanceToTrunk(meshAnalyzer.Vertices[i].Position, out distance1, out Vector3 _, meshAnalyzer.Branches);
-                    //     num2 = (float) new System.Random(branch.GetRootParent(meshAnalyzer.Branches)).NextDouble() - 0.5f + (float) branch.GetDepth(meshAnalyzer.Branches) * 0.2f + (float) ((new System.Random(branch.Id).NextDouble() - 0.5) * 0.10000000149011612);
-                    // }
-                    //
-                    // if (leafForVertex.IsValid)
-                    // {
-                    //     float distance2;
-                    //     meshAnalyzer.Hierarchy.DistanceToBranch(meshAnalyzer.Vertices[i].Position, branch,
-                    //         out distance2, out Vector3 _);
-                    //     distance1 += distance2;
-                    //     num1 = Mathf.Clamp01(distance2 + 2f);
-                    //     num2 += (float) ((new System.Random(leafForVertex.Id).NextDouble() - 0.5) * 0.10000000149011612);
-                    // }
-                    // a = distance1 / Mathf.Max(bounds.extents.x, bounds.extents.z);
-                    // color[i].r = num2 + num1 * 0.1f;
-                    // color[i].g = num1;
-                    // color[i].b = 1;
-                    // color[i].a = 1;
-                    // uv1[i].x = GetNormalizedHeightMaskFromBounds_Straight(meshAnalyzer.Vertices[i].Position, bounds);
-                    // uv1[i].y = Mathf.Lerp(a, a * a, 0.5f);
+                    float distance1 = 0.0f;
+                    float num1 = 0.0f;
+                    float num2 = 0.0f;
+                    float a;
+                    Branch branch = meshAnalyzer.TryGetBranchForVertex(i);
+                    Leaf leafForVertex = meshAnalyzer.TryGetLeafForVertex(i);
+                    if (leafForVertex.IsValid)
+                        branch = meshAnalyzer.TryGetBranchByID(leafForVertex.Branch);
+                    if (branch.IsValid && !branch.IsTrunk)
+                    {
+                        meshAnalyzer.Hierarchy.DistanceToTrunk(meshAnalyzer.Vertices[i].Position, out distance1, out Vector3 _, meshAnalyzer.Branches);
+                        num2 = (float) new System.Random(branch.GetRootParent(meshAnalyzer.Branches)).NextDouble() - 0.5f + (float) branch.GetDepth(meshAnalyzer.Branches) * 0.2f + (float) ((new System.Random(branch.Id).NextDouble() - 0.5) * 0.10000000149011612);
+
+                        if (branch.IsTrunk == false)
+                        {
+                           
+                            float maxDist = float.MinValue;
+                            float minDist = float.MaxValue;
+                            foreach (var VARIABLE in branch.Triangles)
+                            {
+                                Vector3 location = VARIABLE.Center;
+                                meshAnalyzer.Hierarchy.DistanceToTrunk(location,out float dist, out Vector3 _, meshAnalyzer.Branches);
+                                if (dist > maxDist)
+                                {
+                                    branch.branchPositionEnd = location;
+                                    maxDist = dist;
+                                }
+
+                                if (dist < minDist)
+                                {
+                                    branch.branchPositionStart = location;
+                                    minDist = dist;
+                                }
+                            }
+                            if (BakePivot)
+                            {
+                                uv2[i].x = branch.branchPositionStart.x;
+                                uv2[i].y = branch.branchPositionStart.y;
+                                uv3[i].x = branch.branchPositionStart.z;
+                                uv3[i].y = branch.branchPositionEnd.x;
+                                uv4[i].x = branch.branchPositionEnd.y;
+                                uv4[i].y = branch.branchPositionEnd.z;
+                               
+                            }   
+                        }
+                    }
+                    else
+                    {
+                        branch.branchPositionEnd = new Vector3(0, 1, 0);
+                        branch.branchPositionStart = new Vector3(0, 0, 0);
+                        if (BakePivot)
+                        {
+                            uv2[i].x = branch.branchPositionStart.x;
+                            uv2[i].y = branch.branchPositionStart.y;
+                            uv3[i].x = branch.branchPositionStart.z;
+                            uv3[i].y = branch.branchPositionEnd.x;
+                            uv4[i].x = branch.branchPositionEnd.y;
+                            uv4[i].y = branch.branchPositionEnd.z;
+                               
+                        }   
+                    }
+                    
+                    if (leafForVertex.IsValid)
+                    {
+                        float distance2;
+                        meshAnalyzer.Hierarchy.DistanceToBranch(meshAnalyzer.Vertices[i].Position, branch,
+                            out distance2, out Vector3 _);
+                        distance1 += distance2;
+                        num1 = Mathf.Clamp01(distance2 + 2f);
+                        num2 += (float) ((new System.Random(leafForVertex.Id).NextDouble() - 0.5) * 0.10000000149011612);
+
+                        uv2[i].x = leafForVertex.AnchorPoint.x;
+                        uv2[i].y = leafForVertex.AnchorPoint.y;
+                        uv3[i].x =  leafForVertex.AnchorPoint.z;
+                    }
+                    
+                    a = distance1 / Mathf.Max(bounds.extents.x, bounds.extents.z);
+                    color[i].r = num2 + num1 * 0.1f;
+                    color[i].g = num1;
+                    color[i].b = 1;
+                    color[i].a = branch.IsTrunk ? 0f : 1f;
+                    uv1[i].x = GetNormalizedHeightMaskFromBounds_Straight(meshAnalyzer.Vertices[i].Position, bounds);
+                    uv1[i].y = Mathf.Lerp(a, a * a, 0.5f);
+                    meshAnalyzer.mesh.colors = color;
+                    meshAnalyzer.mesh.uv2 = uv1;
+                    meshAnalyzer.mesh.uv3= uv2;
+                    meshAnalyzer.mesh.uv4 = uv3;
+                    meshAnalyzer.mesh.uv5 = uv4;
                     break;
                 default:
                     break;
             }
         }
-
-        meshAnalyzer.mesh.colors = color;
-        meshAnalyzer.mesh.uv2 = uv1;
-        
     }
 
     void Refresh()
