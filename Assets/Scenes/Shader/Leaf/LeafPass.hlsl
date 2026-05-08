@@ -27,9 +27,6 @@ void VertexMethod(VertexAttributes vertex, inout Varyings varyings, float4 timeO
     WindInput input = GetWindInput(vertex,varyings,windFade,
                                     heightMask,phaseOffset,objectPivot);
     
-    
-    Wind_Trunk(vertex,input,varyings);
-    Wind_TrunkBranch(vertex,input,varyings);
     float3 windOffset =  Wind(
        input,
        varyings.positionWS,
@@ -38,6 +35,9 @@ void VertexMethod(VertexAttributes vertex, inout Varyings varyings, float4 timeO
     float3 resultOffset = windOffset;
     varyings.positionWS =  FixStretching(  varyings.positionWS + resultOffset, varyings.positionWS,
     varyings.branchStart );
+    Wind_Trunk(vertex,input,varyings);
+    Wind_TrunkBranch(vertex,input,varyings);
+    
     // }
     
     varyings.positionWS = ApplyScaleFade( varyings.positionWS, objectPivot, scaleFade);

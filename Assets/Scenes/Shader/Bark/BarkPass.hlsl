@@ -30,11 +30,11 @@ void VertexMethod(VertexAttributes vertex, inout Varyings varyings, float4 timeO
        varyings.positionWS,
        timeOffset );
   
-    // float3 resultOffset = windOffset;
-    // varyings.positionWS =  FixStretching(  
-    //     varyings.positionWS + resultOffset, 
-    //     varyings.positionWS,
-    // varyings.branchStart);
+    float3 resultOffset = windOffset;
+    varyings.positionWS =  FixStretching(  
+        varyings.positionWS + resultOffset, 
+        varyings.positionWS,
+    varyings.branchStart);
     Wind_Trunk(vertex,input,varyings);
     Wind_TrunkBranch(vertex,input,varyings);
    
