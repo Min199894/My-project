@@ -23,7 +23,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Grass Patch
-  m_Shader: {fileID: 4800000, guid: 5fd673685b00a5140aa8676a732d3656, type: 3}
+  m_Shader: {fileID: 4800000, guid: 0d5997ead6157cb469d585f035f58f1c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
