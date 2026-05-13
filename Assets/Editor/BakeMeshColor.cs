@@ -112,6 +112,12 @@ public class BakeMeshColor : EditorWindow
         return Mathf.Clamp01(vertex.y / bounds.size.y);
     }
     
+    protected float GetHeightMaskFromBounds_Sphere(Vector3 vertex, Bounds bounds)
+    {
+        float num = Mathf.Max(bounds.extents.x, bounds.extents.z);
+        return Mathf.Max(Mathf.Abs(vertex.x) / num, Mathf.Abs(vertex.z) / num, Mathf.Max(vertex.y, 0.0f) / bounds.size.y);
+    }
+    
     public struct VertexData
     {
         public Vector3 Pivot;
@@ -139,8 +145,9 @@ public class BakeMeshColor : EditorWindow
             switch (meshAnalyzer.Vertices[i].Type)
             {
                 case VertexType.Grass:
-                    color[i].r = meshAnalyzer.mesh.colors[i].r;
-                    color[i].g = (float) new System.Random(meshAnalyzer.Vertices[i].SegmentID).NextDouble() - 0.5f;
+                    //color[i].r = meshAnalyzer.mesh.colors[i].r;
+                    color[i].r = GetNormalizedHeightMaskFromBounds_Straight(meshAnalyzer.Vertices[i].Position, bounds);
+                    color[i].g = (float) new System.Random(meshAnalyzer.SegmentIDs[i]).NextDouble() - 0.5f;
                     color[i].b = 1;
                     meshAnalyzer.mesh.colors = color;
                     //meshAnalyzer.mesh.uv2 = uv1;
@@ -189,7 +196,6 @@ public class BakeMeshColor : EditorWindow
                                 uv3[i].y = branch.branchPositionEnd.x;
                                 uv4[i].x = branch.branchPositionEnd.y;
                                 uv4[i].y = branch.branchPositionEnd.z;
-                               
                             }   
                         }
                     }
@@ -221,6 +227,9 @@ public class BakeMeshColor : EditorWindow
                         uv2[i].x = leafForVertex.AnchorPoint.x;
                         uv2[i].y = leafForVertex.AnchorPoint.y;
                         uv3[i].x =  leafForVertex.AnchorPoint.z;
+                        uv3[i].y = leafForVertex.AnchorPoint.x;
+                        uv4[i].x = leafForVertex.AnchorPoint.y;
+                        uv4[i].y = leafForVertex.AnchorPoint.z;
                     }
                     
                     a = distance1 / Mathf.Max(bounds.extents.x, bounds.extents.z);
@@ -235,6 +244,16 @@ public class BakeMeshColor : EditorWindow
                     meshAnalyzer.mesh.uv3= uv2;
                     meshAnalyzer.mesh.uv4 = uv3;
                     meshAnalyzer.mesh.uv5 = uv4;
+                    break;
+                case VertexType.Plant:
+                    float num4 = 0.0f;
+                    Segment segmentForVertex2 = meshAnalyzer.TryGetSegmentForVertex(i);
+                    if(segmentForVertex2.IsValid)
+                        num4 = (float) new System.Random(segmentForVertex2.Id).NextDouble() - 0.5f;
+                    float fromBoundsSphere = GetNormalizedHeightMaskFromBounds_Straight(meshAnalyzer.Vertices[i].Position, bounds);
+                    color[i].r = Mathf.Lerp(fromBoundsSphere, fromBoundsSphere * fromBoundsSphere, 0.5f) * 0.8f;
+                    color[i].g = num4;
+                    meshAnalyzer.mesh.colors = color;
                     break;
                 default:
                     break;
@@ -264,4 +283,6 @@ public class BakeMeshColor : EditorWindow
             importSettings = null;
         }
     }
+    
+    //Gzimoz
 }

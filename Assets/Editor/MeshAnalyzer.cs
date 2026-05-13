@@ -182,4 +182,12 @@ public struct MeshAnalyzer
         int leafId = this.LeafIDs[vertexID];
         return leafId <= -1 || leafId >= this.Leaves.Length ? Leaf.Invalid : this.Leaves[leafId];
     }
+    
+    public Segment TryGetSegmentForVertex(int vertexID)
+    {
+        if (this.SegmentIDs == null || vertexID < 0 || vertexID >= this.SegmentIDs.Length)
+            return Segment.Invalid;
+        int segmentId = this.SegmentIDs[vertexID];
+        return segmentId <= -1 || segmentId >= this.Segments.Length ? Segment.Invalid : this.Segments[segmentId];
+    }
 }
