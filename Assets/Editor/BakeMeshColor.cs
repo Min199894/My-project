@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;  
 using UnityEditor;
 using System.Linq;
+using System.Xml.Serialization;
 using Unity.VisualScripting;
 using VisualDesignCafe.Nature.Editor.Importers;
 using Object = UnityEngine.Object;
@@ -13,11 +15,14 @@ public class BakeMeshColor : EditorWindow
 {
     public Object target;
     public bool BakePivot = false;
+    public bool BakeFromXML = false;
+    public TextAsset XMLAsset;
     public struct MeshImport
     {
         public Mesh mesh;
         public Material[] materials;
         public VertexType[] meshType;
+        public int lod;
     }
     
     public MeshImport[] importSettings;
@@ -53,6 +58,8 @@ public class BakeMeshColor : EditorWindow
         EditorGUILayout.BeginVertical();
         BakePivot = EditorGUILayout.Toggle("Bake Pivot to branch?", BakePivot);
         target = EditorGUILayout.ObjectField("Target", target, typeof(Object), true) as GameObject;
+        BakeFromXML = EditorGUILayout.Toggle("Bake to XML?", BakeFromXML);
+        XMLAsset = EditorGUILayout.ObjectField("XMLAsset", XMLAsset, typeof(TextAsset), true) as TextAsset;
         if (target != null)
         {
             EditorGUILayout.LabelField("Mesh", "Type");
@@ -92,18 +99,16 @@ public class BakeMeshColor : EditorWindow
         
         if (GUILayout.Button("Bake"))
         {
-            //ModelImporter importer = AssetImporter.GetAtPath(addr) as ModelImporter;
-            //importer.isReadable = true;
             MeshAnalyzer[] meshAnalyzers = new MeshAnalyzer[importSettings.Length];
             for (int i = 0; i < importSettings.Length; i++)
             {
-                
-                meshAnalyzers[i] = new MeshAnalyzer(importSettings[i].mesh,importSettings[i].meshType);
-                BakeVertexColor(meshAnalyzers[i]);
+                meshAnalyzers[i] = new MeshAnalyzer(importSettings[i].mesh, importSettings[i].meshType);
+                BakeVertexColor(meshAnalyzers[i], i);
             }
-            
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+
+            
         }
         EditorGUILayout.EndVertical();
     }
@@ -131,7 +136,20 @@ public class BakeMeshColor : EditorWindow
         public float SecondaryMask;
     }
 
-    void BakeVertexColor(MeshAnalyzer meshAnalyzer)
+    TreeData GetTreeData(TextAsset Asset)
+    {
+        SpeedTreeRawData rawData = new SpeedTreeRawData();
+        XmlSerializer serializer = new XmlSerializer(typeof(SpeedTreeRawData));
+        using (StringReader reader = new StringReader(Asset.text))
+        {
+            rawData = (SpeedTreeRawData)serializer.Deserialize(reader);
+        }
+        TreeData treeData = new TreeData();
+        treeData.InitialTreeData(rawData);
+        return treeData;
+    }
+
+    void BakeVertexColor(MeshAnalyzer meshAnalyzer, int lod)
     {
         Color[] color = new Color[meshAnalyzer.Vertices.Length];
         Vector2[] uv1 = new Vector2[meshAnalyzer.Vertices.Length];
@@ -140,6 +158,14 @@ public class BakeMeshColor : EditorWindow
         Vector2[] uv4 = new Vector2[meshAnalyzer.Vertices.Length];
         
         Bounds bounds = meshAnalyzer.mesh.bounds;
+
+       
+        TreeData treeData = new TreeData();//GetTreeData(XMLAsset);
+        if (BakeFromXML)
+        {
+            treeData = GetTreeData(XMLAsset);
+        }
+
         for (int i = 0; i < meshAnalyzer.Vertices.Length; i++)
         {
             switch (meshAnalyzer.Vertices[i].Type)
@@ -166,16 +192,19 @@ public class BakeMeshColor : EditorWindow
                     {
                         meshAnalyzer.Hierarchy.DistanceToTrunk(meshAnalyzer.Vertices[i].Position, out distance1, out Vector3 _, meshAnalyzer.Branches);
                         num2 = (float) new System.Random(branch.GetRootParent(meshAnalyzer.Branches)).NextDouble() - 0.5f + (float) branch.GetDepth(meshAnalyzer.Branches) * 0.2f + (float) ((new System.Random(branch.Id).NextDouble() - 0.5) * 0.10000000149011612);
+                    }
 
-                        if (branch.IsTrunk == false)
+                    if (!BakeFromXML)
+                    {
+                        if (branch.IsValid && !branch.IsTrunk && branch.IsTrunk == false)
                         {
-                           
                             float maxDist = float.MinValue;
                             float minDist = float.MaxValue;
                             foreach (var VARIABLE in branch.Triangles)
                             {
                                 Vector3 location = VARIABLE.Center;
-                                meshAnalyzer.Hierarchy.DistanceToTrunk(location,out float dist, out Vector3 _, meshAnalyzer.Branches);
+                                meshAnalyzer.Hierarchy.DistanceToTrunk(location, out float dist, out Vector3 _,
+                                    meshAnalyzer.Branches);
                                 if (dist > maxDist)
                                 {
                                     branch.branchPositionEnd = location;
@@ -188,6 +217,7 @@ public class BakeMeshColor : EditorWindow
                                     minDist = dist;
                                 }
                             }
+
                             if (BakePivot)
                             {
                                 uv2[i].x = branch.branchPositionStart.x;
@@ -196,42 +226,66 @@ public class BakeMeshColor : EditorWindow
                                 uv3[i].y = branch.branchPositionEnd.x;
                                 uv4[i].x = branch.branchPositionEnd.y;
                                 uv4[i].y = branch.branchPositionEnd.z;
-                            }   
+                            }
+                        }
+                        else
+                        {
+                            branch.branchPositionEnd = new Vector3(0, 1, 0);
+                            branch.branchPositionStart = new Vector3(0, 0, 0);
+                            if (BakePivot)
+                            {
+                                uv2[i].x = branch.branchPositionStart.x;
+                                uv2[i].y = branch.branchPositionStart.y;
+                                uv3[i].x = branch.branchPositionStart.z;
+                                uv3[i].y = branch.branchPositionEnd.x;
+                                uv4[i].x = branch.branchPositionEnd.y;
+                                uv4[i].y = branch.branchPositionEnd.z;
+                            }
+                        }
+
+                        if (leafForVertex.IsValid)
+                        {
+                            float distance2;
+                            meshAnalyzer.Hierarchy.DistanceToBranch(meshAnalyzer.Vertices[i].Position, branch,
+                                out distance2, out Vector3 _);
+                            distance1 += distance2;
+                            num1 = Mathf.Clamp01(distance2 + 2f);
+                            num2 += (float)((new System.Random(leafForVertex.Id).NextDouble() - 0.5) *
+                                            0.10000000149011612);
+
+                            uv2[i].x = leafForVertex.AnchorPoint.x;
+                            uv2[i].y = leafForVertex.AnchorPoint.y;
+                            uv3[i].x = leafForVertex.AnchorPoint.z;
+                            uv3[i].y = leafForVertex.AnchorPoint.x;
+                            uv4[i].x = leafForVertex.AnchorPoint.y;
+                            uv4[i].y = leafForVertex.AnchorPoint.z;
                         }
                     }
                     else
                     {
-                        branch.branchPositionEnd = new Vector3(0, 1, 0);
-                        branch.branchPositionStart = new Vector3(0, 0, 0);
-                        if (BakePivot)
+                        int boneid = treeData.VertexDatas[lod][i].BoneID;
+                        boneid = Mathf.Max(0, boneid);
+          
+                        if (meshAnalyzer.Vertices[i].Type == VertexType.Leaf)
                         {
-                            uv2[i].x = branch.branchPositionStart.x;
-                            uv2[i].y = branch.branchPositionStart.y;
-                            uv3[i].x = branch.branchPositionStart.z;
-                            uv3[i].y = branch.branchPositionEnd.x;
-                            uv4[i].x = branch.branchPositionEnd.y;
-                            uv4[i].y = branch.branchPositionEnd.z;
-                               
-                        }   
+                            uv2[i].x = treeData.VertexDatas[lod][i].WindAnchor.X;
+                            uv2[i].y = treeData.VertexDatas[lod][i].WindAnchor.Y;
+                            uv3[i].x = treeData.VertexDatas[lod][i].WindAnchor.Z;;
+                            uv3[i].y = treeData.VertexDatas[lod][i].WindAnchor.X;
+                            uv4[i].x = treeData.VertexDatas[lod][i].WindAnchor.Y;
+                            uv4[i].y = treeData.VertexDatas[lod][i].WindAnchor.Z;;
+                        }
+                        else
+                        {
+                            uv2[i].x = treeData.RawData.Bones.BoneList[boneid].StartX;
+                            uv2[i].y = treeData.RawData.Bones.BoneList[boneid].StartY;
+                            uv3[i].x = treeData.RawData.Bones.BoneList[boneid].StartZ;
+                            uv3[i].y = treeData.RawData.Bones.BoneList[boneid].EndX;
+                            uv4[i].x = treeData.RawData.Bones.BoneList[boneid].EndY;
+                            uv4[i].y = treeData.RawData.Bones.BoneList[boneid].EndZ;
+                        }
                     }
-                    
-                    if (leafForVertex.IsValid)
-                    {
-                        float distance2;
-                        meshAnalyzer.Hierarchy.DistanceToBranch(meshAnalyzer.Vertices[i].Position, branch,
-                            out distance2, out Vector3 _);
-                        distance1 += distance2;
-                        num1 = Mathf.Clamp01(distance2 + 2f);
-                        num2 += (float) ((new System.Random(leafForVertex.Id).NextDouble() - 0.5) * 0.10000000149011612);
 
-                        uv2[i].x = leafForVertex.AnchorPoint.x;
-                        uv2[i].y = leafForVertex.AnchorPoint.y;
-                        uv3[i].x =  leafForVertex.AnchorPoint.z;
-                        uv3[i].y = leafForVertex.AnchorPoint.x;
-                        uv4[i].x = leafForVertex.AnchorPoint.y;
-                        uv4[i].y = leafForVertex.AnchorPoint.z;
-                    }
-                    
                     a = distance1 / Mathf.Max(bounds.extents.x, bounds.extents.z);
                     color[i].r = num2 + num1 * 0.1f;
                     color[i].g = num1;
@@ -274,6 +328,7 @@ public class BakeMeshColor : EditorWindow
                 importSettings[i].mesh = meshFilters[i].sharedMesh;
                 importSettings[i].materials = meshRenderers[i].sharedMaterials;
                 importSettings[i].meshType = new VertexType[meshFilters[i].sharedMesh.subMeshCount];
+                importSettings[i].lod = i;
             }
         }
         else

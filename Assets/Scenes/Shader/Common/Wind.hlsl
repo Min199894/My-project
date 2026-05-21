@@ -298,7 +298,7 @@ float3 CombineWind(float3 ambient, float3 gust, float3 turbulence, float3 shiver
     turbulence *= 0.15;
     shiver *= 0.15;
     
-    return ambient+ gust + lerp(turbulence, shiver, gustLength) * increaseTurbelenceWithGust;
+    return ambient + gust + lerp(turbulence, shiver, gustLength) * increaseTurbelenceWithGust;
 }
 float GetTrunkMask(float3 vertex, float2 uv1, float bendFactor, float baseBendFactor )
 {
@@ -483,8 +483,8 @@ float2 GetTrunkBendFactor()
 {
     return _TrunkBendFactor.xy;
 }
-
 #endif
+
 void Wind_Trunk(
     VertexAttributes vertex,
     WindInput input,
@@ -519,6 +519,19 @@ void Wind_Trunk(
     varyings.positionWS = RotateAroundAxis(input.objectPivot, varyings.positionWS,
                             normalize(cross(float3(0,1,0), input.direction)),
                             (baseFrequency*0.75 + gustFrequency) * ambientStrength *0.0375 * 2);
+}
+
+float GetAngle(float3 a, float3 b)
+{
+    // 1. Normalize both vectors to ensure they are unit length
+    float3 nA = normalize(a);
+    float3 nB = normalize(b);
+    
+    // 2. Get the dot product and clamp to avoid NaNs from floating point errors
+    float dotP = clamp(dot(nA, nB), -1.0, 1.0);
+    
+    // 3. Return the arc-cosine
+    return acos(dotP);
 }
 
 void Wind_TrunkBranch(
@@ -558,7 +571,8 @@ void Wind_TrunkBranch(
     #ifdef _TYPE_TREE_BARK
     varyings.positionWS = RotateAroundAxis(TransformObjectToWorld(varyings.branchStart), varyings.positionWS,
                             normalize(cross(varyings.branchEnd - varyings.branchStart, input.direction)),
-                             (baseFrequency*0.75 + gustFrequency) * ambientStrength *0.0375 * 2);
+                             //(baseFrequency*0.75 + gustFrequency) * ambientStrength *0.0375 * 2);
+                             min(GetAngle(varyings.branchEnd - varyings.branchStart, input.direction),(baseFrequency*0.75 + gustFrequency) * ambientStrength *0.0375 * 2));
     #endif
     
     #ifdef _TYPE_TREE_LEAVES

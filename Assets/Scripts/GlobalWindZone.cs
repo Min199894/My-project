@@ -12,6 +12,8 @@ public class GlobalWindZone : MonoBehaviour
   [HideInInspector]
   [SerializeField]
   private int _selectedPreset;
+  [SerializeField]
+  private SimpleSpring _globalSimpleSpring;
   private Quaternion _cachedRotation;
   private float _cachedWindMain;
   private float _cachedWindPulseFrequency;
@@ -28,6 +30,7 @@ public class GlobalWindZone : MonoBehaviour
   private float _speedVelocity;
   private float _turbulence;
   private float _turbulenceVelocity;
+  
 
   public static GlobalWindZone Instance { get; private set; }
 
@@ -93,8 +96,9 @@ public class GlobalWindZone : MonoBehaviour
     Shader.SetGlobalVector("g_SmoothTime", new Vector4((float) this._smoothWindOffset * 6f, (float) this._smoothWindOffset * 0.15f, (float) this._smoothWindOffset * 3.5f, (float) this._smoothWindOffset * 3.5f));
     this._direction = Vector2.SmoothDamp(this._direction, this.Settings.WindDirection, ref this._directionVelocity, 1f, 1f, (float) deltaTime);
     this._turbulence = Mathf.SmoothDamp(this._turbulence, this.Settings.Turbulence, ref this._turbulenceVelocity, 1f, 1f, (float) deltaTime);
+    
     this._speed = Mathf.SmoothDamp(this._speed, this.Settings.WindSpeed, ref this._speedVelocity, 1f, 1f, (float) deltaTime);
-    this._strength = Mathf.SmoothDamp(this._strength, this.Settings.WindStrength, ref this._strengthVelocity, 1f, 1f, (float) deltaTime);
+    this._strength = _globalSimpleSpring.SmoothDamp(this._strength, this.Settings.WindStrength, ref this._strengthVelocity,(float) deltaTime);
     this._prevWindOffset = this._windOffset;
     this._windOffset += (float) deltaTime * this._speed * this._direction * 0.15f;
     Shader.SetGlobalVector("g_WindOffset", new Vector4(this._windOffset.x, this._windOffset.y, this._prevWindOffset.x, this._prevWindOffset.y));
@@ -112,6 +116,7 @@ public class GlobalWindZone : MonoBehaviour
     else
       this.UpdateDirection(false);
     this._windSettings.Apply(this._gustNoise);
+    this._globalSimpleSpring = new SimpleSpring();
   }
 
   private void Update()
